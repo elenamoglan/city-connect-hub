@@ -83,7 +83,7 @@ export default function IssueDetail() {
       return;
     }
 
-    setIssue(data as Issue);
+    setIssue(data as unknown as Issue);
     setLoading(false);
   };
 

@@ -65,7 +65,7 @@ export default function IssueMapPage() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setIssues(data as Issue[]);
+      setIssues(data as unknown as Issue[]);
     }
     setLoading(false);
   };
@@ -171,7 +171,7 @@ export default function IssueMapPage() {
               center={mapCenter}
               zoom={12}
               className="h-full"
-              onIssueClick={(issue) => setSelectedIssue(issue)}
+              onIssueClick={(issue) => setSelectedIssue(issue as Issue)}
             />
             
             {/* Selected Issue Panel */}

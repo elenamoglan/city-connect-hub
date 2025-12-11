@@ -81,7 +81,7 @@ export default function AdminDashboard() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setIssues(data as Issue[]);
+      setIssues(data as unknown as Issue[]);
     }
     setLoading(false);
   };
