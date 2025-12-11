@@ -23,11 +23,11 @@ interface Issue {
   id: string;
   title: string;
   description: string;
-  image_url: string | null;
+  image_url?: string | null;
   status: IssueStatus;
   latitude: number;
   longitude: number;
-  created_at: string;
+  created_at?: string;
   profiles?: {
     name: string;
   };
