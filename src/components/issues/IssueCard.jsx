@@ -3,24 +3,7 @@ import { StatusBadge } from './StatusBadge';
 import { MapPin, Clock, User } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-interface IssueCardProps {
-  issue: {
-    id: string;
-    title: string;
-    description: string;
-    image_url?: string | null;
-    status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-    latitude: number;
-    longitude: number;
-    created_at?: string;
-    profiles?: {
-      name: string;
-    };
-  };
-  onClick?: () => void;
-}
-
-export function IssueCard({ issue, onClick }: IssueCardProps) {
+export function IssueCard({ issue, onClick }) {
   return (
     <Card 
       className="overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.01] group"

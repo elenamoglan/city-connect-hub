@@ -26,33 +26,14 @@ import { toast } from 'sonner';
 import { Search, Filter, Shield, AlertTriangle, Clock, CheckCircle2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface Issue {
-  id: string;
-  user_id: string;
-  title: string;
-  description: string;
-  image_url: string | null;
-  status: IssueStatus;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-  updated_at: string;
-  profiles?: {
-    name: string;
-    email: string;
-  };
-}
-
 export default function AdminDashboard() {
   const { user, role, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -81,12 +62,12 @@ export default function AdminDashboard() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setIssues(data as unknown as Issue[]);
+      setIssues(data);
     }
     setLoading(false);
   };
 
-  const updateIssueStatus = async (issueId: string, newStatus: IssueStatus) => {
+  const updateIssueStatus = async (issueId, newStatus) => {
     setUpdatingId(issueId);
     
     const { error } = await supabase
@@ -114,8 +95,8 @@ export default function AdminDashboard() {
       searchQuery === '' ||
       issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       issue.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      issue.profiles?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      issue.profiles?.email.toLowerCase().includes(searchQuery.toLowerCase());
+      issue.profiles?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      issue.profiles?.email?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
@@ -296,7 +277,7 @@ export default function AdminDashboard() {
                       <TableCell>
                         <Select
                           value={issue.status}
-                          onValueChange={(value) => updateIssueStatus(issue.id, value as IssueStatus)}
+                          onValueChange={(value) => updateIssueStatus(issue.id, value)}
                           disabled={updatingId === issue.id}
                         >
                           <SelectTrigger className="w-[140px]">

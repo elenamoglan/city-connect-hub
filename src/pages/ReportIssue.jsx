@@ -20,17 +20,17 @@ const reportSchema = z.object({
 export default function ReportIssue() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
   });
-  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -56,7 +56,7 @@ export default function ReportIssue() {
     }
   }, []);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -66,7 +66,7 @@ export default function ReportIssue() {
       setImageFile(file);
       const reader = new FileReader();
       reader.onload = () => {
-        setImagePreview(reader.result as string);
+        setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -93,10 +93,10 @@ export default function ReportIssue() {
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
+        const newErrors = {};
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            newErrors[err.path[0] as string] = err.message;
+            newErrors[err.path[0]] = err.message;
           }
         });
         setErrors(newErrors);
@@ -105,7 +105,7 @@ export default function ReportIssue() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!user || !validateForm()) return;
@@ -140,8 +140,8 @@ export default function ReportIssue() {
         user_id: user.id,
         title: formData.title.trim(),
         description: formData.description.trim(),
-        latitude: selectedLocation!.lat,
-        longitude: selectedLocation!.lng,
+        latitude: selectedLocation.lat,
+        longitude: selectedLocation.lng,
         image_url: imageUrl,
       });
 
@@ -149,7 +149,7 @@ export default function ReportIssue() {
 
       toast.success('Issue reported successfully!');
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Failed to submit report');
     } finally {
       setLoading(false);

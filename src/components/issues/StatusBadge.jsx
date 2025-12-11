@@ -1,12 +1,5 @@
 import { cn } from '@/lib/utils';
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface StatusBadgeProps {
-  status: IssueStatus;
-  className?: string;
-}
-
 const statusConfig = {
   OPEN: {
     label: 'Open',
@@ -22,7 +15,7 @@ const statusConfig = {
   },
 };
 
-export function StatusBadge({ status, className }: StatusBadgeProps) {
+export function StatusBadge({ status, className }) {
   const config = statusConfig[status];
   
   return (
