@@ -3,42 +3,20 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Fix for default marker icons in Leaflet with bundlers
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface Issue {
-  id: string;
-  title: string;
-  description: string;
-  status: IssueStatus;
-  latitude: number;
-  longitude: number;
-}
-
-interface IssueMapProps {
-  issues: Issue[];
-  center?: [number, number];
-  zoom?: number;
-  onIssueClick?: (issue: Issue) => void;
-  className?: string;
-  interactive?: boolean;
-  onLocationSelect?: (lat: number, lng: number) => void;
-  selectedLocation?: { lat: number; lng: number } | null;
-}
-
-const statusColors: Record<IssueStatus, string> = {
+const statusColors = {
   OPEN: '#dc2626',
   IN_PROGRESS: '#d97706',
   RESOLVED: '#16a34a',
 };
 
-function createCustomIcon(status: IssueStatus) {
+function createCustomIcon(status) {
   const color = statusColors[status];
   return L.divIcon({
     className: 'custom-marker',
@@ -66,11 +44,11 @@ export function IssueMap({
   interactive = true,
   onLocationSelect,
   selectedLocation,
-}: IssueMapProps) {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<L.Marker[]>([]);
-  const selectedMarkerRef = useRef<L.Marker | null>(null);
+}) {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+  const selectedMarkerRef = useRef(null);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -91,7 +69,7 @@ export function IssueMap({
     }).addTo(map);
 
     if (onLocationSelect) {
-      map.on('click', (e: L.LeafletMouseEvent) => {
+      map.on('click', (e) => {
         onLocationSelect(e.latlng.lat, e.latlng.lng);
       });
     }

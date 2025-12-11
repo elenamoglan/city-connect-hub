@@ -22,30 +22,11 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface Issue {
-  id: string;
-  user_id: string;
-  title: string;
-  description: string;
-  image_url: string | null;
-  status: IssueStatus;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-  updated_at: string;
-  profiles?: {
-    name: string;
-    email: string;
-  };
-}
-
 export default function IssueDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [issue, setIssue] = useState<Issue | null>(null);
+  const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
 
@@ -83,7 +64,7 @@ export default function IssueDetail() {
       return;
     }
 
-    setIssue(data as unknown as Issue);
+    setIssue(data);
     setLoading(false);
   };
 

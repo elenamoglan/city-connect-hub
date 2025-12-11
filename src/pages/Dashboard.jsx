@@ -7,23 +7,10 @@ import { IssueCard } from '@/components/issues/IssueCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, FileText, MapPin } from 'lucide-react';
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface Issue {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string | null;
-  status: IssueStatus;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-}
-
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,7 +35,7 @@ export default function Dashboard() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setIssues(data as Issue[]);
+      setIssues(data);
     }
     setLoading(false);
   };

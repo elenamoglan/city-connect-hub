@@ -22,7 +22,7 @@ export function Navbar() {
     navigate('/');
   };
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path) => location.pathname === path;
 
   const navLinks = [
     { path: '/map', label: 'View Map' },

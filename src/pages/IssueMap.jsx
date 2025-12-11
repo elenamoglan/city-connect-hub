@@ -17,31 +17,15 @@ import {
 } from '@/components/ui/select';
 import { Search, Filter, List, MapIcon, X } from 'lucide-react';
 
-type IssueStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-
-interface Issue {
-  id: string;
-  title: string;
-  description: string;
-  image_url?: string | null;
-  status: IssueStatus;
-  latitude: number;
-  longitude: number;
-  created_at?: string;
-  profiles?: {
-    name: string;
-  };
-}
-
 export default function IssueMapPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState('map');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [selectedIssue, setSelectedIssue] = useState(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -65,7 +49,7 @@ export default function IssueMapPage() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setIssues(data as unknown as Issue[]);
+      setIssues(data);
     }
     setLoading(false);
   };
@@ -79,7 +63,7 @@ export default function IssueMapPage() {
     return matchesStatus && matchesSearch;
   });
 
-  const mapCenter: [number, number] = issues.length > 0
+  const mapCenter = issues.length > 0
     ? [
         issues.reduce((sum, i) => sum + i.latitude, 0) / issues.length,
         issues.reduce((sum, i) => sum + i.longitude, 0) / issues.length,
@@ -171,7 +155,7 @@ export default function IssueMapPage() {
               center={mapCenter}
               zoom={12}
               className="h-full"
-              onIssueClick={(issue) => setSelectedIssue(issue as Issue)}
+              onIssueClick={(issue) => setSelectedIssue(issue)}
             />
             
             {/* Selected Issue Panel */}

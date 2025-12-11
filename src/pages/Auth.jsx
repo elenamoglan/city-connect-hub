@@ -27,7 +27,7 @@ export default function Auth() {
     password: '',
     name: '',
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState({});
 
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
@@ -49,10 +49,10 @@ export default function Auth() {
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
+        const newErrors = {};
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            newErrors[err.path[0] as string] = err.message;
+            newErrors[err.path[0]] = err.message;
           }
         });
         setErrors(newErrors);
@@ -61,7 +61,7 @@ export default function Auth() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) return;
