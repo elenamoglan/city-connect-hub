@@ -8,11 +8,11 @@ interface IssueCardProps {
     id: string;
     title: string;
     description: string;
-    image_url: string | null;
+    image_url?: string | null;
     status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
     latitude: number;
     longitude: number;
-    created_at: string;
+    created_at?: string;
     profiles?: {
       name: string;
     };
@@ -54,10 +54,12 @@ export function IssueCard({ issue, onClick }: IssueCardProps) {
             <MapPin className="h-3 w-3" />
             {issue.latitude.toFixed(4)}, {issue.longitude.toFixed(4)}
           </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            {formatDistanceToNow(new Date(issue.created_at), { addSuffix: true })}
-          </span>
+          {issue.created_at && (
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {formatDistanceToNow(new Date(issue.created_at), { addSuffix: true })}
+            </span>
+          )}
           {issue.profiles?.name && (
             <span className="flex items-center gap-1">
               <User className="h-3 w-3" />
