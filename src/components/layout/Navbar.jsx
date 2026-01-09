@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 export function Navbar() {
   const { user, role, signOut } = useAuth();
@@ -62,6 +63,7 @@ export function Navbar() {
 
         {/* User Menu / Auth Buttons */}
         <div className="hidden md:flex md:items-center md:gap-3">
+          {user && <NotificationBell />}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
